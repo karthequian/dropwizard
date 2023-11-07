@@ -2,6 +2,7 @@ package io.dropwizard.jackson;
 
 import com.fasterxml.jackson.databind.jsontype.impl.StdSubtypeResolver;
 import com.google.common.collect.ImmutableList;
+import io.github.pixee.security.BoundedLineReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +63,7 @@ public class DiscoverableSubtypeResolver extends StdSubtypeResolver {
                      InputStreamReader streamReader = new InputStreamReader(input, StandardCharsets.UTF_8);
                      BufferedReader reader = new BufferedReader(streamReader)) {
                     String line;
-                    while ((line = reader.readLine()) != null) {
+                    while ((line = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
                         final Class<?> loadedClass = loadClass(line);
                         if (loadedClass != null) {
                             serviceClasses.add(loadedClass);
