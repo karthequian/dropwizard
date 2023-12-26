@@ -8,6 +8,7 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.Resources;
 import com.google.common.net.HttpHeaders;
 import com.google.common.net.MediaType;
+import io.github.pixee.security.Newlines;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -151,7 +152,7 @@ public class AssetServlet extends HttpServlet {
             }
 
             resp.setDateHeader(HttpHeaders.LAST_MODIFIED, cachedAsset.getLastModifiedTime());
-            resp.setHeader(HttpHeaders.ETAG, cachedAsset.getETag());
+            resp.setHeader(HttpHeaders.ETAG, Newlines.stripAll(cachedAsset.getETag()));
 
             final String mimeTypeOfExtension = req.getServletContext()
                                                   .getMimeType(req.getRequestURI());
