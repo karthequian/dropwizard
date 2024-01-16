@@ -41,7 +41,7 @@ public class ConfiguredGZipEncoder implements WriterInterceptor, ClientRequestFi
     public final void aroundWriteTo(WriterInterceptorContext context) throws IOException {
         final String contentEncoding = (String) context.getHeaders().getFirst(HttpHeaders.CONTENT_ENCODING);
         if ((contentEncoding != null) &&
-                (contentEncoding.equals("gzip") || contentEncoding.equals("x-gzip"))) {
+                ("gzip".equals(contentEncoding) || "x-gzip".equals(contentEncoding))) {
             context.setOutputStream(new GZIPOutputStream(context.getOutputStream()));
         }
         context.proceed();

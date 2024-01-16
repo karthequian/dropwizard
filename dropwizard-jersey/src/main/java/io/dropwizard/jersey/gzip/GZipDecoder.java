@@ -31,7 +31,7 @@ public class GZipDecoder implements ReaderInterceptor {
 
         final String contentEncoding = context.getHeaders().getFirst(HttpHeaders.CONTENT_ENCODING);
         if (contentEncoding != null &&
-                (contentEncoding.equals("gzip") || contentEncoding.equals("x-gzip"))) {
+                ("gzip".equals(contentEncoding) || "x-gzip".equals(contentEncoding))) {
             context.setInputStream(new GZIPInputStream(context.getInputStream()));
         }
         return context.proceed();
