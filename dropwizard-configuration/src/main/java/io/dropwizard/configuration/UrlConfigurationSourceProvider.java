@@ -1,5 +1,7 @@
 package io.dropwizard.configuration;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -11,6 +13,6 @@ import java.net.URL;
 public class UrlConfigurationSourceProvider implements ConfigurationSourceProvider {
     @Override
     public InputStream open(String path) throws IOException {
-        return new URL(path).openStream();
+        return Urls.create(path, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).openStream();
     }
 }
