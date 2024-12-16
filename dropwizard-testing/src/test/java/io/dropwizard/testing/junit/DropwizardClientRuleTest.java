@@ -1,5 +1,6 @@
 package io.dropwizard.testing.junit;
 
+import io.github.pixee.security.BoundedLineReader;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -20,14 +21,14 @@ public class DropwizardClientRuleTest {
     @Test(timeout = 5000)
     public void shouldGetStringBodyFromDropWizard() throws IOException {
         final URL url = new URL(RULE_WITH_INSTANCE.baseUri() + "/test");
-        final String response = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8)).readLine();
+        final String response = BoundedLineReader.readLine(new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8)), 5_000_000);
         assertEquals("foo", response);
     }
 
     @Test(timeout = 5000)
     public void shouldGetDefaultStringBodyFromDropWizard() throws IOException {
         final URL url = new URL(RULE_WITH_CLASS.baseUri() + "/test");
-        final String response = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8)).readLine();
+        final String response = BoundedLineReader.readLine(new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8)), 5_000_000);
         assertEquals(TestResource.DEFAULT_MESSAGE, response);
     }
 }
