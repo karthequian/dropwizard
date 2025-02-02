@@ -7,6 +7,8 @@ import io.dropwizard.Configuration;
 import io.dropwizard.testing.ConfigOverride;
 import io.dropwizard.testing.ResourceHelpers;
 import io.dropwizard.testing.junit.DropwizardAppRule;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -118,7 +120,7 @@ public class SslReloadAppTest {
     /** Issues a POST against the reload ssl admin task, asserts that the code and content
      *  are as expected, and finally returns the server certificate */
     private byte[] certBytes(int code, String content) throws Exception {
-        final URL url = new URL("https://localhost:" + rule.getAdminPort() + "/tasks/reload-ssl");
+        final URL url = Urls.create("https://localhost:" + rule.getAdminPort() + "/tasks/reload-ssl", Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         final HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
         try {
             postIt(conn);
