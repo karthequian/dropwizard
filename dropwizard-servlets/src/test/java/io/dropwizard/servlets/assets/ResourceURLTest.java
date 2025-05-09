@@ -2,6 +2,8 @@ package io.dropwizard.servlets.assets;
 
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -79,7 +81,7 @@ public class ResourceURLTest {
     @Test
     public void isDirectoryThrowsResourceNotFoundExceptionForMissingDirectories() throws Exception {
         final URL url = Resources.getResource("META-INF/");
-        final URL nurl = new URL(url.toExternalForm() + "missing");
+        final URL nurl = Urls.create(url.toExternalForm() + "missing", Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         assertThatThrownBy(() -> ResourceURL.isDirectory(nurl))
             .isInstanceOf(ResourceNotFoundException.class);
     }

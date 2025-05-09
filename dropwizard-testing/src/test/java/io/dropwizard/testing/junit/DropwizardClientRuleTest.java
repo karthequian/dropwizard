@@ -1,5 +1,7 @@
 package io.dropwizard.testing.junit;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -19,14 +21,14 @@ public class DropwizardClientRuleTest {
 
     @Test(timeout = 5000)
     public void shouldGetStringBodyFromDropWizard() throws IOException {
-        final URL url = new URL(RULE_WITH_INSTANCE.baseUri() + "/test");
+        final URL url = Urls.create(RULE_WITH_INSTANCE.baseUri() + "/test", Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         final String response = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8)).readLine();
         assertEquals("foo", response);
     }
 
     @Test(timeout = 5000)
     public void shouldGetDefaultStringBodyFromDropWizard() throws IOException {
-        final URL url = new URL(RULE_WITH_CLASS.baseUri() + "/test");
+        final URL url = Urls.create(RULE_WITH_CLASS.baseUri() + "/test", Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         final String response = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8)).readLine();
         assertEquals(TestResource.DEFAULT_MESSAGE, response);
     }

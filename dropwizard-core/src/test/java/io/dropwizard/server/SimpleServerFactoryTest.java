@@ -15,6 +15,8 @@ import io.dropwizard.logging.SyslogAppenderFactory;
 import io.dropwizard.servlets.tasks.Task;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.validation.BaseValidator;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.eclipse.jetty.server.AbstractNetworkConnector;
 import org.eclipse.jetty.server.Server;
 import org.junit.Before;
@@ -98,7 +100,7 @@ public class SimpleServerFactoryTest {
     }
 
     public static String httpRequest(String requestMethod, String url) throws Exception {
-        final HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        final HttpURLConnection connection = (HttpURLConnection) Urls.create(url, Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS).openConnection();
         connection.setRequestMethod(requestMethod);
         connection.connect();
         try (InputStream inputStream = connection.getInputStream()) {
