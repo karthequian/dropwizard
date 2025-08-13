@@ -16,6 +16,8 @@ import io.dropwizard.logging.SyslogAppenderFactory;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.setup.ExceptionMapperBinder;
 import io.dropwizard.validation.BaseValidator;
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import org.eclipse.jetty.server.AbstractNetworkConnector;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.NetworkConnector;
@@ -172,7 +174,7 @@ public class DefaultServerFactoryTest {
         final int port = ((AbstractNetworkConnector) server.getConnectors()[0]).getLocalPort();
 
         Future<String> futureResult = executor.submit(() -> {
-            URL url = new URL("http://localhost:" + port + "/app/test");
+            URL url = Urls.create("http://localhost:" + port + "/app/test", Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
             URLConnection connection = url.openConnection();
             connection.connect();
             return CharStreams.toString(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
