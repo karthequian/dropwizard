@@ -1,5 +1,7 @@
 package io.dropwizard.servlets.assets;
 
+import io.github.pixee.security.HostValidator;
+import io.github.pixee.security.Urls;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,10 +73,7 @@ public class ResourceURL {
     public static URL appendTrailingSlash(URL originalURL) {
         try {
             return originalURL.getPath().endsWith("/") ? originalURL :
-                    new URL(originalURL.getProtocol(),
-                            originalURL.getHost(),
-                            originalURL.getPort(),
-                            originalURL.getFile() + '/');
+                    Urls.create(originalURL.getProtocol(), originalURL.getHost(), originalURL.getPort(), originalURL.getFile() + '/', Urls.HTTP_PROTOCOLS, HostValidator.DENY_COMMON_INFRASTRUCTURE_TARGETS);
         } catch (MalformedURLException ignored) { // shouldn't happen
             throw new IllegalArgumentException("Invalid resource URL: " + originalURL);
         }
